@@ -6,9 +6,9 @@ import java.util.Optional;
 
 public class Library {
 
-    // champs toujours publics — sera corrigé en C8
-    public List<Book>   catalogue = new ArrayList<>();
-    public List<Member> membres   = new ArrayList<>();
+    // FIX smell #3 : champs private (étaient public)
+    private final List<Book>   catalogue = new ArrayList<>();
+    private final List<Member> membres   = new ArrayList<>();
 
     public void ajouterLivre(Book book) {
         if (book != null) catalogue.add(book);
@@ -21,23 +21,27 @@ public class Library {
     public Optional<Book> rechercherParIsbn(String isbn) {
         return catalogue.stream()
                 .filter(b -> b.getIsbn().equals(isbn))
-                .findFirst(); // FIX : vraie recherche
+                .findFirst();
+    }
+
+    public Optional<Member> rechercherMembre(String id) {
+        return membres.stream()
+                .filter(m -> m.getId().equals(id))
+                .findFirst();
     }
 
     public List<Book> livresDisponibles() {
         return catalogue.stream()
                 .filter(Book::isAvailable)
-                .toList(); // FIX : filtre les disponibles
+                .toList();
     }
 
     public int nbLivresDisponibles() {
-        return (int) catalogue.stream()
-                .filter(Book::isAvailable).count(); // FIX
+        return (int) catalogue.stream().filter(Book::isAvailable).count();
     }
 
     public int nbLivresEmpruntes() {
-        return (int) catalogue.stream()
-                .filter(b -> !b.isAvailable()).count(); // FIX
+        return (int) catalogue.stream().filter(b -> !b.isAvailable()).count();
     }
 
     public List<Book>   getCatalogue() { return catalogue; }
