@@ -1,0 +1,3 @@
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=maissadridi_tp-clean-code&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=maissadridi_tp-clean-code)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=maissadridi_tp-clean-code&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=maissadridi_tp-clean-code)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=maissadridi_tp-clean-code&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=maissadridi_tp-clean-code)
