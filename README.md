@@ -5,14 +5,13 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=maissadridi_tp-clean-code&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=maissadridi_tp-clean-code)
 [![Duplications](https://sonarcloud.io/api/project_badges/measure?project=maissadridi_tp-clean-code&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=maissadridi_tp-clean-code)
 
-> Projet Java réalisé dans le cadre du cours **Qualité et Tests Logiciels** — ESIEE-IT 2025/2026  
 > Démonstration du cycle **TDD Red / Green / Refactor** appliqué commit par commit.
 
 ---
 
 ## Description
 
-Système de gestion de prêts pour une bibliothèque. Un membre peut emprunter jusqu'à 3 livres simultanément. Chaque fonctionnalité a été développée en TDD strict : le test est écrit avant le code, et chaque commit correspond à une étape précise du cycle.
+Système de gestion de prêts pour une bibliothèque. Un membre peut emprunter jusqu'à 3 livres simultanément. Chaque fonctionnalité a été développée en TDD : le test est écrit avant le code, et chaque commit correspond à une étape précise du cycle.
 
 ---
 
