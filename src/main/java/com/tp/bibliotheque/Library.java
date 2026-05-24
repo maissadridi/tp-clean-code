@@ -6,36 +6,38 @@ import java.util.Optional;
 
 public class Library {
 
-    // BUG 1 : champs publics
+    // champs toujours publics — sera corrigé en C8
     public List<Book>   catalogue = new ArrayList<>();
     public List<Member> membres   = new ArrayList<>();
 
     public void ajouterLivre(Book book) {
-        catalogue.add(book); // BUG 2 : pas de vérification null
+        if (book != null) catalogue.add(book);
     }
 
     public void inscrireMembre(Member membre) {
-        membres.add(membre); // BUG 3 : pas de vérification null
+        if (membre != null) membres.add(membre);
     }
 
     public Optional<Book> rechercherParIsbn(String isbn) {
-        // BUG 4 : retourne toujours vide
-        return Optional.empty();
+        return catalogue.stream()
+                .filter(b -> b.getIsbn().equals(isbn))
+                .findFirst(); // FIX : vraie recherche
     }
 
     public List<Book> livresDisponibles() {
-        // BUG 5 : retourne toujours vide
-        return new ArrayList<>();
+        return catalogue.stream()
+                .filter(Book::isAvailable)
+                .toList(); // FIX : filtre les disponibles
     }
 
     public int nbLivresDisponibles() {
-        // BUG 6 : retourne toujours 0
-        return 0;
+        return (int) catalogue.stream()
+                .filter(Book::isAvailable).count(); // FIX
     }
 
     public int nbLivresEmpruntes() {
-        // BUG 7 : retourne toujours 0
-        return 0;
+        return (int) catalogue.stream()
+                .filter(b -> !b.isAvailable()).count(); // FIX
     }
 
     public List<Book>   getCatalogue() { return catalogue; }

@@ -5,47 +5,68 @@ import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
-// C1 RED — ces tests compilent mais échouent
 class LibraryTest {
 
+    private Library library;
+    private Book    book1;
+    private Book    book2;
+
+    @BeforeEach
+    void setUp() {
+        library = new Library();
+        book1   = new Book("978-0-13", "Clean Code",  "R. Martin");
+        book2   = new Book("978-0-20", "Refactoring", "M. Fowler");
+    }
+
     @Test
-    @DisplayName("livresDisponibles : retourne les livres non empruntés")
+    @DisplayName("ajouterLivre : le livre apparaît dans le catalogue")
+    void ajouterLivre_shouldAddToCatalogue() {
+        library.ajouterLivre(book1);
+        assertEquals(1, library.getCatalogue().size());
+    }
+
+    @Test
+    @DisplayName("livresDisponibles : retourne uniquement les livres non empruntés")
     void livresDisponibles_onlyAvailable() {
-        Library library = new Library();
-        Book b1 = new Book("ISBN-1", "Clean Code", "R. Martin");
-        Book b2 = new Book("ISBN-2", "Refactoring", "M. Fowler");
-        library.ajouterLivre(b1);
-        library.ajouterLivre(b2);
-        b1.checkout("M01");
+        library.ajouterLivre(book1);
+        library.ajouterLivre(book2);
+        book1.checkout("M01");
 
         List<Book> dispo = library.livresDisponibles();
 
-        // ÉCHOUE : livresDisponibles() retourne toujours une liste vide
         assertEquals(1, dispo.size());
-        assertTrue(dispo.contains(b2));
+        assertTrue(dispo.contains(book2));
     }
 
     @Test
     @DisplayName("rechercherParIsbn : retourne le bon livre")
     void rechercherParIsbn_found() {
-        Library library = new Library();
-        Book b1 = new Book("978-0-13", "Clean Code", "R. Martin");
-        library.ajouterLivre(b1);
+        library.ajouterLivre(book1);
 
         Optional<Book> result = library.rechercherParIsbn("978-0-13");
 
-        // ÉCHOUE : rechercherParIsbn() retourne toujours Optional.empty()
         assertTrue(result.isPresent());
+        assertEquals("Clean Code", result.get().getTitre());
     }
 
     @Test
-    @DisplayName("nbLivresDisponibles : compte correct")
-    void nbLivresDisponibles_correct() {
-        Library library = new Library();
-        library.ajouterLivre(new Book("I1", "T1", "A1"));
-        library.ajouterLivre(new Book("I2", "T2", "A2"));
+    @DisplayName("rechercherParIsbn : ISBN inconnu → Optional vide")
+    void rechercherParIsbn_notFound() {
+        library.ajouterLivre(book1);
 
-        // ÉCHOUE : nbLivresDisponibles() retourne toujours 0
-        assertEquals(2, library.nbLivresDisponibles());
+        Optional<Book> result = library.rechercherParIsbn("INCONNU");
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("nbLivresDisponibles : compte correct après emprunt")
+    void nbLivresDisponibles_afterCheckout() {
+        library.ajouterLivre(book1);
+        library.ajouterLivre(book2);
+        book1.checkout("M01");
+
+        assertEquals(1, library.nbLivresDisponibles());
+        assertEquals(1, library.nbLivresEmpruntes());
     }
 }

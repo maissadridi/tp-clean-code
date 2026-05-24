@@ -1,11 +1,14 @@
 package com.tp.bibliotheque;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BookTest {
 
-    // ── GREEN ──────────────────────────────────────────────
+    // ── tests existants (inchangés) ───────────────────────────────────────
     @Test
     @DisplayName("Un livre nouvellement créé est disponible")
     void newBook_shouldBeAvailable() {
@@ -21,37 +24,45 @@ class BookTest {
         assertFalse(book.isAvailable());
     }
 
-    // ── RED 3 ─────────────────────────────────────────────────────────────
     @Test
     @DisplayName("Emprunter un livre déjà emprunté lève IllegalStateException")
     void checkoutAlreadyCheckedOut_shouldThrow() {
-        // ARRANGE
         Book book = new Book("978-3-16", "Clean Code", "R. Martin");
         book.checkout("membre-1");
-        // ACT + ASSERT
-        assertThrows(IllegalStateException.class,
-                () -> book.checkout("membre-2")); // ÉCHOUE : aucune exception levée
+        assertThrows(IllegalStateException.class, () -> book.checkout("membre-2"));
     }
 
-    // ── RED 4 ─────────────────────────────────────────────────────────────
     @Test
     @DisplayName("Retourner un livre emprunté le remet disponible")
     void returnBook_shouldMakeAvailableAgain() {
-        // ARRANGE
         Book book = new Book("978-3-16", "Clean Code", "R. Martin");
         book.checkout("membre-1");
-        // ACT
         book.returnBook();
-        // ASSERT
-        assertTrue(book.isAvailable()); // ÉCHOUE : returnBook() ne fait rien
+        assertTrue(book.isAvailable());
     }
 
-    // ── RED 5 ─────────────────────────────────────────────────────────────
     @Test
     @DisplayName("Retourner un livre non emprunté lève IllegalStateException")
     void returnBook_notCheckedOut_shouldThrow() {
         Book book = new Book("978-3-16", "Clean Code", "R. Martin");
-        assertThrows(IllegalStateException.class,
-                book::returnBook); // ÉCHOUE : returnBook() ne fait rien
+        assertThrows(IllegalStateException.class, book::returnBook);
+    }
+
+    // ── REFACTOR : @ParameterizedTest — évite la duplication ─────────────
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {" ", "   "})
+    @DisplayName("ISBN invalide (null/vide/blank) → IllegalArgumentException")
+    void invalidIsbn_shouldThrow(String isbn) {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Book(isbn, "Titre", "Auteur"));
+    }
+
+    @ParameterizedTest
+    @NullAndEmptySource
+    @DisplayName("Titre invalide → IllegalArgumentException")
+    void invalidTitre_shouldThrow(String titre) {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Book("978-3-16", titre, "Auteur"));
     }
 }

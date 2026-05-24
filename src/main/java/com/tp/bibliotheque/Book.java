@@ -9,14 +9,25 @@ public class Book {
     public String membreEmprunteurId;
 
     public Book(String isbn, String titre, String auteur) {
+        // REFACTOR : validation extraite dans méthode privée
+        validateParam(isbn,  "ISBN");
+        validateParam(titre, "Titre");
         this.isbn   = isbn;
         this.titre  = titre;
         this.auteur = auteur;
     }
 
-    public boolean isAvailable() {
-        return disponible;
+    // méthode privée extraite — SRP
+    private void validateParam(String valeur, String nom) {
+        if (valeur == null || valeur.isBlank())
+            throw new IllegalArgumentException(nom + " ne peut pas être vide");
     }
+
+    public boolean isAvailable()           { return disponible; }
+    public String  getIsbn()               { return isbn; }
+    public String  getTitre()              { return titre; }
+    public String  getAuteur()             { return auteur; }
+    public String  getMembreEmprunteurId() { return membreEmprunteurId; }
 
     public void checkout(String membreId) {
         if (!disponible)
@@ -28,11 +39,7 @@ public class Book {
     public void returnBook() {
         if (disponible)
             throw new IllegalStateException("Le livre '" + titre + "' n'est pas emprunté");
-        this.disponible         = true;   // FIX : remet disponible
-        this.membreEmprunteurId = null;   // FIX : libère le membre
-    }
-
-    public String getMembreEmprunteurId() {
-        return membreEmprunteurId;
+        this.disponible         = true;
+        this.membreEmprunteurId = null;
     }
 }
